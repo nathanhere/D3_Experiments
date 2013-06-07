@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Experiments in D3js</title>
+	<script src="D3/d3.v3.js" charset="utf-8"></script>
+	<style>
+	body{margin:0px;}
+	.h,.v{stroke:black;stroke-dasharray:4 4;stroke-width:1;stroke-opacity:.5;}
+	.axis path,
+	.axis line {
+	    fill: none;
+	    stroke: black;
+	    shape-rendering: crispEdges;
+	}
+
+	.axis text {
+	    font-family: sans-serif;
+	    font-size: 11px;
+	}
+	</style>
+</head>
+<body>
+	<p>Hello world.</p>
+	<script>
+		//d3.select("body").style("background-color", "green");
+		
+		// Update…
+		var p = d3.select("body").selectAll("p")
+		    .data([4, 8, 15, 16, 23, 42, "asdfadfas"])
+		    .text(String);
+
+		// Enter…
+		p.enter().append("p")
+		    .text(String);
+
+		// Exit…
+		p.exit().remove();
+		
+
+//-Databinding
+//-selecting Elements
+//-what is a node?
+//what is the purpose of enter and exit functions?
+	</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+body {
+	background-color: #ffffff;
+}
+
+div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 75px;
+	margin-right: 2px;
+	background-color: teal;
+}
+
+svg .pumpkin {
+	fill: yellow;
+	stroke: orange;
+	stroke-width: 25;
+}

@@ -1,0 +1,256 @@
+html, body, div, section, article, aside, header, hgroup, footer, nav, h1, h2, h3, h4, h5, h6, p, blockquote, address, time, span, em, strong, img, ol, ul, li, figure, canvas, video, th, td, tr {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #cb7d20;
+}
+
+a:hover {
+	color: #952;
+}
+
+
+address, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, nav, menu, nav, section, summary {
+	display: block;
+}
+
+html {
+	background: #ffffff;
+}
+
+body {
+	font: 100% Georgia, "Times New Roman", Times, serif;
+	width: 1020px;
+	margin: 0 auto;
+	padding: 0 50px;
+	text-align:left;
+	position: relative;
+	background: #ffffff;
+}
+
+nav ul, ul.menu {
+	list-style: none;
+}
+
+
+header#mainHeader {
+	height: 20px;
+}
+
+header#mainHeader {
+	padding: 20px 0 0 0;
+	position: relative;
+	border-bottom: 2px solid #000000;
+	margin-bottom: 1em;
+}
+
+header#mainHeader nav {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding-top: 15px;
+}
+
+header#mainHeader ul {
+	float: left;
+}
+header#mainHeader ul li {
+	float: left;
+}
+header#mainHeader ul li a{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1.2em;
+	color: #000;
+	padding: 0 20px;
+	border-right: 1px solid #000;
+	text-decoration: none;
+}
+header#mainHeader ul li a:last-child{
+	border: none;
+}
+header#mainHeader ul li a.current {
+	color: #cb7d20;
+}
+header#mainHeader ul li a:hover {
+	color: #cb7d20;
+}
+
+section#mind {
+	float: left;
+	width: 320px;
+	border-right: 1px solid #000000;
+	padding: 0 10px 0 10px;
+	margin-bottom: 0;
+}
+section#body {
+	float: left;
+	width: 320px;
+	border-right: 1px solid #000000;
+	padding: 0 10px 0 10px;
+	margin-bottom: 0;
+}
+section#soul {
+	float: left;
+	width: 320px;
+	padding: 0 0 0 10px;
+	margin-bottom: 0;
+}
+
+
+/*mind info section styles*/
+section#mind h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+
+section#mind aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#mind aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+/*body section styles*/
+section#body h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#body aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#body aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+/*soul section styles*/
+section#soul h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#soul aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#soul aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+/*about section styles*/
+section#about h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#about aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#about aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+/*faq section styles*/
+section#faq h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#faq aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#faq aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+/*news section styles*/
+section#news h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#news aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#news aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+
+/*contact section styles*/
+section#contact h2{
+	font-size: 2.6em;
+	font-weight: normal;
+	color: #7f7f7f;
+	margin-bottom: .5em;
+}
+section#contact aside {
+	background: #e1d8b9;
+	padding: 0 20px 20px;
+	margin-bottom: 1.5em;
+}
+section#contact aside h2 {
+	font-size: 1.6em;
+	color: #000;
+	background: #c3cebc;
+	margin: 0 -20px .5em;
+	padding: .5em;
+}
+
+footer#mainFooter {
+	border-top: 2px solid #7f7f7f;
+	position: relative;
+	top: 600px;
+}
+
+footer#mainFooter p {
+	position: relative;
+	top: 0;
+}
+

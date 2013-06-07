@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Experiments in D3</title>
+	<link rel="stylesheet" href="style.css"/>
+	<script src="D3/d3.v3.js"></script>
+</head>
+<body>
+
+	<script type="text/javascript">
+		var app = {}, w = 500, h = 500, barPadding = 1;
+
+		app.d3=d3;
+		/*
+		app.dataset = [];
+		app.dataset = foo(app.dataset);
+
+		function foo(d){
+			var i = 0;
+			for( i = 0; i < 25; i++){
+				var newNum = Math.round(Math.random()* 50);
+				d.push(newNum);
+			}
+			return d;
+		};
+		*/
+		app.dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+		app.d3.select("body").selectAll("div")
+			.data(app.dataset) // since there are 5 values, everything after this method will execute 5 times
+			.enter()
+			.append("div")
+			.attr("class", "bar")
+			.style("height", function(d) {
+				var barHeight = d * 5;
+				return barHeight + "px";
+			});
+
+		var svg = app.d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+/*
+		app.circles = svg.selectAll("circle")
+						.data(app.dataset)
+						.enter()
+						.append("circle");
+
+		app.circles.attr("cx", function(d, i) {
+									return (i * 50) + 25;
+								})
+					.attr("cy", h/2)
+					.attr("r", function(d) {
+									return d;
+								})
+					.attr("fill", "yellow")
+					.attr("stroke", "orange")
+					.attr("stroke-width", function(d) {
+												return d/2;
+											});
+*/
+		svg.selectAll("rect")
+		   .data(app.dataset)
+		   .enter()
+		   .append("rect")
+		   .attr({
+		        x: function(d, i) { return i * (w / app.dataset.length); },
+		        y: function(d) { return h - (d * 4); },
+		        width: w / app.dataset.length - barPadding,
+		        height: function(d) { return d * 4; },
+		        fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+		   });
+		    
+		svg.selectAll("text")
+		   .data(app.dataset)
+		   .enter()
+		   .append("text")
+		   .text(function(d) { return d; })
+		   .attr({
+		   		"text-anchor": "middle",
+		        x: function(d, i) { return i * (w / app.dataset.length) + (w / app.dataset.length - barPadding) / 2; },
+		        y: function(d) { return h - (d * 4) + 15; },
+		        "font-family": "sans-serif",
+		        "font-size": "11px",
+		        fill: "white"
+		   });
+
+	</script>
+
+</body>
+</html>
