@@ -9,9 +9,10 @@
 <body>
 
 	<script type="text/javascript">
-		var app = {}, w = 500, h = 500, barPadding = 1;
+		/* exported d3 */
+		'use strict';
+		var app = {}, w = 500, h = 500;
 
-		app.d3=d3;
 		/*
 		app.dataset = [];
 		app.dataset = foo(app.dataset);
@@ -25,6 +26,7 @@
 			return d;
 		};
 		*/
+
 		app.dataset = [
 		                  [ 5,     20 ],
 		                  [ 480,   90 ],
@@ -38,10 +40,10 @@
 		                  [ 220,   88 ]
 		              ];
 
-		var svg = app.d3.select("body")
-						.append("svg")
-						.attr("width", w)
-						.attr("height", h);
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h);
 
 		svg.selectAll("circle")
 			.data(app.dataset)
@@ -50,35 +52,35 @@
 			.attr({
 				cx: function(d) { return d[0]; },
 				cy: function(d) { return d[1]; },
-				r: function(d) { return Math.sqrt(h - d[1]); }
-			})
+				r: function(d) { return Math.sqrt(100 - d[1]); }
+			});
 			
-		 svg.selectAll("text")
-		 	.data(app.dataset)
-		 	.enter()
-		 	.append("text")
-		 	.text(function(d) { return (d[0] + "," + d[1]); })
-		 	.attr({
-		 		x: function(d) { return d[0]; },
-		 		y: function(d) { return d[1]; },
-		 		"font-family": "sans-serif",
-		 		"font-size": "11px",
-		 		fill: "red"
-		 	});	
+		svg.selectAll("text")
+			.data(app.dataset)
+			.enter()
+			.append("text")
+			.text(function(d) { return (d[0] + "," + d[1]); })
+			.attr({
+					x: function(d) { return d[0]; },
+					y: function(d) { return d[1]; },
+					"font-family": "sans-serif",
+					"font-size": "11px",
+					fill: "red"
+				});	
 /*
 		svg.selectAll("text")
-		   .data(app.dataset)
-		   .enter()
-		   .append("text")
-		   .text(function(d) { return d; })
-		   .attr({
-		   		"text-anchor": "middle",
-		        x: function(d, i) { return i * (w / app.dataset.length) + (w / app.dataset.length - barPadding) / 2; },
-		        y: function(d) { return h - (d * 4) + 15; },
-		        "font-family": "sans-serif",
-		        "font-size": "11px",
-		        fill: "white"
-		   });
+				.data(app.dataset)
+				.enter()
+				.append("text")
+				.text(function(d) { return d; })
+				.attr({
+						"text-anchor": "middle",
+						x: function(d, i) { return i * (w / app.dataset.length) + (w / app.dataset.length - barPadding) / 2; },
+						y: function(d) { return h - (d * 4) + 15; },
+						"font-family": "sans-serif",
+						"font-size": "11px",
+						fill: "white"
+					});
 */
 	</script>
 
