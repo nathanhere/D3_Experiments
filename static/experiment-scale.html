@@ -52,6 +52,7 @@
 								.range([padding, w - padding * 2])
 								.nice();
 
+		// This unique scale that inverses the range so that dots are bigger if they are closer to the svg canvas axis
 		app.yScale = d3.scale.linear()
 								.domain([0, d3.max(app.dataset, function(d) { return d[1]; })])
 								.range([h - padding, padding]);

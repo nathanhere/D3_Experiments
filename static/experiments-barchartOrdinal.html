@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Experiments in D3</title>
+	<link rel="stylesheet" href="style.css"/>
+	<script src="D3/d3.v3.js"></script>
+</head>
+<body>
+	<p>Click here</p>
+	<script type="text/javascript">
+		var app = {}, w = 600, h = 257, barPadding = 1;
+		
+		app.dataset = [];
+		
+		// Generate random values for bar chart
+		function randomValues(d, i){
+
+			for( j = 0; j < i; j++){
+				var newNum = Math.round(Math.random()* 50);
+				d.push(newNum);
+			}
+			return d;
+		};
+		
+		app.dataset = randomValues(app.dataset, 25);
+		/*
+		// Dataset for bar chart
+		app.dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+		*/
+        // Ordinal scale is like categories. In this example, it's being used as a sort of clever way to "autofit" the barchart to the dimensions of the svg canvas
+
+        app.xScale = d3.scale.ordinal()
+        						.domain(d3.range(app.dataset.length))
+        						.rangeRoundBands([0, w], 0.05); // First argument says “calculate even bands starting at 0 and ending at w, then set this scale’s range to those bands.”. The second argument is the proportion of spacing in between each bar--proportion of the first argument.
+		app.yScale = d3.scale.linear()
+						.domain([0, d3.max(app.dataset, function(d) { return d; })])
+						.range([barPadding, h-  barPadding]);
+
+		// Create the SVG stage
+		var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+		// Draw actual bar charts. x,y are the starting positions of the bars, not the width/height
+		svg.selectAll("rect")
+			.data(app.dataset)
+			.enter()
+			.append("rect")
+			.attr({
+				x: function(d, i) { return app.xScale(i); },
+				y: function(d) { return h - (d * 4); },
+				width: app.xScale.rangeBand(), // Note rangeBand is singular (no 's' at the end)
+				height: function(d) { return d * 4; },
+				fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+		   });
+
+		// Bar chart data-labels 
+		svg.selectAll("text")
+			.data(app.dataset)
+			.enter()
+			.append("text")
+			.text(function(d) { return d; })
+			.attr({
+				"text-anchor": "middle",
+				x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
+				y: function(d) { return h - (d * 4) + 15; },
+				"font-family": "sans-serif",
+				"font-size": "11px",
+				fill: "white"
+			});
+
+		// Create event listener on the "p" tags
+		d3.select("p").on("click", function() {
+			// Do something on click
+			app.dataset = [];
+			app.dataset = randomValues(app.dataset, 25); // Change the data
+			app.yScale = d3.scale.linear()
+									.domain([0, d3.max(app.dataset, function(d) { return d; })])
+									.range([barPadding, h -barPadding]);
+
+			// Note that 'enter()' is not required because additional array elements are are not being added
+			svg.selectAll("rect")
+				.data(app.dataset) // rebind new value to existing elements
+				.attr({
+					y: function(d) { return h - app.yScale(d); },
+					height: function(d) { return app.yScale(d); },
+					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+				});
+
+			svg.selectAll("text")
+				.data(app.dataset)
+				.text(function(d) { return d; })
+				.attr({
+					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
+					y: function(d) { return h - app.yScale(d) + 14; },
+				});
+		});
+
+	</script>
+
+</body>
+</html>
