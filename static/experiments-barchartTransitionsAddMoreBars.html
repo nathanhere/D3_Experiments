@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Experiments in D3</title>
+	<link rel="stylesheet" href="style.css"/>
+	<script src="D3/d3.v3.js"></script>
+</head>
+<body>
+	<p>Click here</p>
+	<script type="text/javascript">
+		var app = {}, w = 600, h = 257, barPadding = 1;
+		// Create the SVG stage
+		var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+						
+		app.dataset = [];
+		app.dataset1 = [];
+		// Generate random values for bar chart
+		function randomValues(i){
+			var maxValue = 25;
+			var d = [];
+			for( j = 0; j < i; j++){
+				var newNum = Math.floor(Math.random() * maxValue);
+				d = d.concat(newNum);
+			}
+			return d;
+		};
+		
+		// Dataset for bar chart
+		app.dataset = app.dataset.concat(randomValues(25)); // Use 'array.concat()' because 'array.push()' seems to add another array--resulting in a set of arrays.
+		
+		// Old static ataset for bar chart
+		//app.dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+        // Ordinal scale is like categories. In this example, it's being used as a sort of clever way to "autofit" the barchart to the dimensions of the svg canvas
+        function updateXscale() {
+	        app.xScale = d3.scale.ordinal()
+	        						.domain(d3.range(app.dataset.length))
+	        						.rangeRoundBands([0, w], 0.05); // First argument says “calculate even bands starting at 0 and ending at w, then set this scale’s range to those bands.”. The second argument is the proportion of spacing in between each bar--proportion of the first argument.
+		}
+		function updateYscale() {
+			app.yScale = d3.scale.linear()
+							.domain([0, d3.max(app.dataset)])
+							.range([1, h - 1]);
+			return app.yScale;
+		}
+
+
+
+		// Draw actual bar charts. x,y are the starting positions of the bars, not the width/height
+		function updateBars(){
+			svg.selectAll("rect")
+				.data(app.dataset)
+				.enter()
+				.append("rect")
+				.attr({
+					x: function(d, i) { return app.xScale(i); },
+					y: function(d) {return h - app.yScale(d); },
+					width: app.xScale.rangeBand(), // Note rangeBand is singular (no 's' at the end)
+					height: function(d) { return app.yScale(d); },
+					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+			   });
+		}
+		function updateBar(){
+			svg.selectAll("rect")
+				.data(app.dataset)
+				.enter()
+				.append("rect")
+				.attr({
+					x: w,
+					y: function(d) {return h - app.yScale(d); },
+					width: app.xScale.rangeBand(), // Note rangeBand is singular (no 's' at the end)
+					height: function(d) { return app.yScale(d); },
+					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+			   });
+		}
+		function barTransition(){
+			svg.selectAll("rect")
+				.data(app.dataset)
+				// ---REBIND NEW VALUES TO EXISITING ELEMENTS---
+				.transition()
+				//.duration(2000) // optional milliseconds. Default is 250 milliseconds.
+				//.ease("circle") // default is cubic-in-out. Other options are: linear, circle, elastic, bounce
+				// ---UPDATE VISUALS---
+				.attr({
+					x: function(d, i) { return app.xScale(i); },
+					y: function(d) { return h - app.yScale(d); },
+					width: function(d) { return app.xScale.rangeBand(); },
+					height: function(d) { return app.yScale(d); },
+					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+				});
+		}
+		// Bar chart data-labels 
+		function updateTexts(){
+			svg.selectAll("text")
+				.data(app.dataset)
+				.enter()
+				.append("text")
+				.text(function(d) { return d; })
+				.attr({
+					"text-anchor": "middle",
+					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
+					y: function(d) { return h - app.yScale(d) + 14; },
+					"font-family": "sans-serif",
+					"font-size": "11px",
+					fill: "white"
+				});
+			}
+		function updateText(){
+			svg.selectAll("text")
+				.data(app.dataset)
+				.enter()
+				.append("text")
+				.text(function(d) { return d; })
+				.attr({
+					"text-anchor": "middle",
+					x: w,
+					y: function(d) { return h - app.yScale(d) + 14; },
+					"font-family": "sans-serif",
+					"font-size": "11px",
+					fill: "white"
+				});
+			}
+		function textTransition(){
+			svg.selectAll("text")
+				.data(app.dataset)
+				.transition()
+				//.duration(2000)
+				//.ease("circle")
+				.text(function(d) { return d; })
+				.attr({
+					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
+					y: function(d) { return h - app.yScale(d) + 14; },
+				});
+		}
+
+		updateXscale();
+		updateYscale();
+		updateBars();
+		updateTexts();
+		// Create event listener on the "p" tags.
+		// Three steps for transitions: (1) Update data, (2) rebind data, (3) update visuals
+		d3.select("p").on("click", function() {
+			// ---UPDATE DATA---
+			app.dataset = app.dataset.concat(randomValues(1));
+			updateXscale();
+			updateYscale();
+			updateBar();
+			barTransition();
+			updateText();
+			textTransition();
+		});
+
+	</script>
+
+</body>
+</html>
