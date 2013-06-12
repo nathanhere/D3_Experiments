@@ -151,26 +151,38 @@
 		// Create event listener on the "p" tags.
 		// Three steps for transitions: (1) Update data, (2) rebind data, (3) update visuals
 		d3.select(".add").on("click", function() {
-			// ---UPDATE DATA---
+			// Enter...
 			app.dataset = app.dataset.concat(randomValues(1));
 			updateXscale();
 			updateYscale();
 			updateBar();
 			updateText();
+			// Update...
 			barTransition();
 			textTransition();
 		});
-/*
+
 		d3.select(".remove").on("click", function() {
 			app.dataset.shift();
 			bars = svg.selectAll("rect").data(app.dataset);
+			// Enter....
+			updateXscale();
+			updateYscale();
+			updateBar();
+			updateText();
+
+			// Update...
+			barTransition();
+			textTransition();
+
+			// Exit...
 			bars.exit()
 				.transition()
 				.duration(500)
 				.attr("x", w)
 				.remove();
 		})
-*/
+
 	</script>
 
 </body>

@@ -20,23 +20,31 @@
 						.attr("height", h);
 
 		app.dataset = [];
-		app.dataset1 = [];
+
 		// Generate random values for bar chart
-		function randomValues(i){
+		function randomValues(num){
 			var maxValue = 25;
 			var d = [];
-			for( j = 0; j < i; j++){
-				var newNum = Math.floor(Math.random() * maxValue);
-				d = d.concat(newNum);
+			var kv = {}
+			var i, k, v;
+
+			if (app.dataset.length !== 0) {
+				k = app.dataset[app.dataset.length - 1].k + 1;
+			} else {
+				k = 0;
 			}
-			return d;
+
+			for( i = 0; i < num; i++){
+				v = Math.floor(Math.random() * maxValue);
+				kv = {'k':k, 'v':v};
+				d.push(kv);
+				k++;
+			}
+			return d
 		};
 		
 		// Dataset for bar chart
 		app.dataset = app.dataset.concat(randomValues(25)); // Use 'array.concat()' because 'array.push()' seems to add another array--resulting in a set of arrays.
-		
-		// Old static ataset for bar chart
-		//app.dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
 
         // Ordinal scale is like categories. In this example, it's being used as a sort of clever way to "autofit" the barchart to the dimensions of the svg canvas
         function updateXscale() {
@@ -46,131 +54,117 @@
 		}
 		function updateYscale() {
 			app.yScale = d3.scale.linear()
-							.domain([0, d3.max(app.dataset)])
+							.domain([0, d3.max(app.dataset, function(d) { return d.v; })])
 							.range([1, h - 1]);
-			return app.yScale;
 		}
-
-
 
 		// Draw actual bar charts. x,y are the starting positions of the bars, not the width/height
-		function updateBars(){
+		function updateBars(initialBool){
 			svg.selectAll("rect")
-				.data(app.dataset)
+				.data(app.dataset, function(d) { return d.k; })
 				.enter()
 				.append("rect")
 				.attr({
-					x: function(d, i) { return app.xScale(i); },
-					y: function(d) {return h - app.yScale(d); },
+					x: (initialBool) ? function(d, i) { return app.xScale(i); } : w,
+					y: function(d) {return h - app.yScale(d.v); },
 					width: app.xScale.rangeBand(), // Note rangeBand is singular (no 's' at the end)
-					height: function(d) { return app.yScale(d); },
-					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
-			   });
-		}
-		function updateBar(){
-			svg.selectAll("rect")
-				.data(app.dataset)
-				.enter()
-				.append("rect")
-				.attr({
-					x: w,
-					y: function(d) {return h - app.yScale(d); },
-					width: app.xScale.rangeBand(), // Note rangeBand is singular (no 's' at the end)
-					height: function(d) { return app.yScale(d); },
-					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+					height: function(d) { return app.yScale(d.v); },
+					fill: function(d) { return "rgb(0, 0, " + (d.v * 10) + ")"; }
 			   });
 		}
 		function barTransition(){
 			svg.selectAll("rect")
-				.data(app.dataset)
+				.data(app.dataset, function(d) { return d.k; })
 				// ---REBIND NEW VALUES TO EXISITING ELEMENTS---
 				.transition()
-				//.duration(2000) // optional milliseconds. Default is 250 milliseconds.
+				.duration(500) // optional milliseconds. Default is 250 milliseconds.
 				//.ease("circle") // default is cubic-in-out. Other options are: linear, circle, elastic, bounce
 				// ---UPDATE VISUALS---
 				.attr({
 					x: function(d, i) { return app.xScale(i); },
-					y: function(d) { return h - app.yScale(d); },
+					y: function(d) { return h - app.yScale(d.v); },
 					width: function(d) { return app.xScale.rangeBand(); },
-					height: function(d) { return app.yScale(d); },
-					fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+					height: function(d) { return app.yScale(d.v); },
+					fill: function(d) { return "rgb(0, 0, " + (d.v * 10) + ")"; }
 				});
 		}
 		// Bar chart data-labels 
-		function updateTexts(){
+		function updateText(initialBool){
 			svg.selectAll("text")
-				.data(app.dataset)
+				.data(app.dataset, function(d) { return d.k; })
 				.enter()
 				.append("text")
-				.text(function(d) { return d; })
+				.text(function(d) { return d.v; })
 				.attr({
 					"text-anchor": "middle",
-					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
-					y: function(d) { return h - app.yScale(d) + 14; },
+					x: (initialBool) ? function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; } : w,
+					y: function(d) { return h - app.yScale(d.v) + 14; },
 					"font-family": "sans-serif",
 					"font-size": "11px",
 					"font-weight": "bold",
 					fill: "white"
 				});
 			}
-		function updateText(){
-			svg.selectAll("text")
-				.data(app.dataset)
-				.enter()
-				.append("text")
-				.text(function(d) { return d; })
-				.attr({
-					"text-anchor": "middle",
-					x: w,
-					y: function(d) { return h - app.yScale(d) + 14; },
-					"font-family": "sans-serif",
-					"font-size": "11px",
-					"font-weight": "bold",
-					fill: "white"
-				});
-			}
+
 		function textTransition(){
 			svg.selectAll("text")
-				.data(app.dataset)
+				.data(app.dataset, function(d) { return d.k; })
 				.transition()
-				//.duration(2000)
+				.duration(500)
 				//.ease("circle")
-				.text(function(d) { return d; })
+				.text(function(d) { return d.v; })
 				.attr({
 					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
-					y: function(d) { return h - app.yScale(d) + 14; },
+					y: function(d) { return h - app.yScale(d.v) + 14; },
 				});
 		}
 
 		updateXscale();
 		updateYscale();
-		updateBars();
-		updateTexts();
+		updateBars(true);
+		updateText(true);
 
-		var bars = svg.selectAll("rect").data(app.dataset);
 		// Create event listener on the "p" tags.
 		// Three steps for transitions: (1) Update data, (2) rebind data, (3) update visuals
 		d3.select(".add").on("click", function() {
-			// ---UPDATE DATA---
+			// Enter...
 			app.dataset = app.dataset.concat(randomValues(1));
 			updateXscale();
 			updateYscale();
-			updateBar();
+			updateBars();
 			updateText();
+			// Update...
 			barTransition();
 			textTransition();
 		});
-/*
+
 		d3.select(".remove").on("click", function() {
 			app.dataset.shift();
-			bars = svg.selectAll("rect").data(app.dataset);
+			var bars = svg.selectAll("rect").data(app.dataset, function(d) { return d.k; });
+			var texts = svg.selectAll("text").data(app.dataset, function(d) { return d.k; });
+			// Enter....
+			updateXscale();
+			updateYscale();
+			updateBars();
+			updateText();
+			
+			// Update...
+			barTransition();
+			textTransition();
+
+			// Exit...
 			bars.exit()
 				.transition()
 				.duration(500)
-				.attr("x", w)
+				.attr("x", -app.xScale.rangeBand())
+				.remove();
+			texts.exit()
+				.transition()
+				.duration(500)
+				.attr("x", -app.xScale.rangeBand())
 				.remove();
 		})
-*/
+
 	</script>
 
 </body>
