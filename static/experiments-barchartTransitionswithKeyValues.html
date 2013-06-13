@@ -7,9 +7,9 @@
 	<script src="D3/d3.v3.js"></script>
 </head>
 <body>
-
-	<p class="add">Click here to add</p>
-	<p class="remove">Click here to remove</p>
+	<p class="add">[Click here to add one bar]</p>
+	<p class="remove">[Click here to remove one bar]</p>
+	<p class="randomize">[Click here to randomize all bars]</p>
 
 	<script type="text/javascript">
 		var app = {}, w = 600, h = 257, barPadding = 1;
@@ -22,15 +22,21 @@
 		app.dataset = [];
 
 		// Generate random values for bar chart
-		function randomValues(num){
+		function randomValues(num, replace){
 			var maxValue = 25;
 			var d = [];
 			var kv = {}
 			var i, k, v;
 
-			if (app.dataset.length !== 0) {
+			if (replace) {
+				// Keeps existing keys and overwrites values
+				k = app.dataset[0].k;
+				//k = d3.min(app.dataset, function(d) { return d.k; });
+			} else if (app.dataset.length !== 0) {
+				// Key index starts at k max + 1
 				k = app.dataset[app.dataset.length - 1].k + 1;
 			} else {
+				// Begin key index at 0
 				k = 0;
 			}
 
@@ -40,7 +46,9 @@
 				d.push(kv);
 				k++;
 			}
+
 			return d
+
 		};
 		
 		// Dataset for bar chart
@@ -52,6 +60,7 @@
 	        						.domain(d3.range(app.dataset.length))
 	        						.rangeRoundBands([0, w], 0.05); // First argument says “calculate even bands starting at 0 and ending at w, then set this scale’s range to those bands.”. The second argument is the proportion of spacing in between each bar--proportion of the first argument.
 		}
+
 		function updateYscale() {
 			app.yScale = d3.scale.linear()
 							.domain([0, d3.max(app.dataset, function(d) { return d.v; })])
@@ -72,22 +81,7 @@
 					fill: function(d) { return "rgb(0, 0, " + (d.v * 10) + ")"; }
 			   });
 		}
-		function barTransition(){
-			svg.selectAll("rect")
-				.data(app.dataset, function(d) { return d.k; })
-				// ---REBIND NEW VALUES TO EXISITING ELEMENTS---
-				.transition()
-				.duration(500) // optional milliseconds. Default is 250 milliseconds.
-				//.ease("circle") // default is cubic-in-out. Other options are: linear, circle, elastic, bounce
-				// ---UPDATE VISUALS---
-				.attr({
-					x: function(d, i) { return app.xScale(i); },
-					y: function(d) { return h - app.yScale(d.v); },
-					width: function(d) { return app.xScale.rangeBand(); },
-					height: function(d) { return app.yScale(d.v); },
-					fill: function(d) { return "rgb(0, 0, " + (d.v * 10) + ")"; }
-				});
-		}
+
 		// Bar chart data-labels 
 		function updateText(initialBool){
 			svg.selectAll("text")
@@ -106,16 +100,35 @@
 				});
 			}
 
+		function barTransition(){
+			svg.selectAll("rect")
+				.data(app.dataset, function(d) { return d.k; })
+				// ---REBIND NEW VALUES TO EXISITING ELEMENTS---
+				.transition()
+				//.delay(function(d, i) { return i * 50; }) // Optional delay--propigation effect
+				.duration(500) // optional milliseconds. Default is 250 milliseconds.
+				//.ease("circle") // default is cubic-in-out. Other options are: linear, circle, elastic, bounce
+				// ---UPDATE VISUALS---
+				.attr({
+					x: function(d, i) { return app.xScale(i); },
+					y: function(d) { return h - app.yScale(d.v); },
+					width: function(d) { return app.xScale.rangeBand(); },
+					height: function(d) { return app.yScale(d.v); },
+					fill: function(d) { return "rgb(0, 0, " + (d.v * 10) + ")"; }
+				});
+		}
+
 		function textTransition(){
 			svg.selectAll("text")
 				.data(app.dataset, function(d) { return d.k; })
 				.transition()
+				//.delay(function(d, i) { return i * 50; }) // Optional delay--propigation effect
 				.duration(500)
 				//.ease("circle")
 				.text(function(d) { return d.v; })
 				.attr({
 					x: function(d, i) { return app.xScale(i) + app.xScale.rangeBand() / 2; },
-					y: function(d) { return h - app.yScale(d.v) + 14; },
+					y: function(d) { return h - app.yScale(d.v) + 14; }
 				});
 		}
 
@@ -163,7 +176,18 @@
 				.duration(500)
 				.attr("x", -app.xScale.rangeBand())
 				.remove();
-		})
+		});
+
+		d3.select(".randomize").on("click", function() {
+			app.dataset = randomValues(app.dataset.length, true);
+			updateXscale();
+			updateYscale();
+			updateBars(true);
+			updateText(true);
+			barTransition();
+			textTransition();
+		});
+
 
 	</script>
 
